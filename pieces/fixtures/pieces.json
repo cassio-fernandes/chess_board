@@ -1,0 +1,1 @@
+[{"model": "pieces.piece", "pk": 1, "fields": {"type": 1, "color": 1}}, {"model": "pieces.piece", "pk": 2, "fields": {"type": 5, "color": 1}}, {"model": "pieces.piece", "pk": 3, "fields": {"type": 5, "color": 2}}, {"model": "pieces.piece", "pk": 4, "fields": {"type": 1, "color": 2}}]
