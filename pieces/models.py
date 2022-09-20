@@ -37,5 +37,6 @@ class Piece(models.Model):
     objects = managers.PieceManager()
 
     class Meta:
+        ordering = ['-id']
         db_table = 'piece'
         verbose_name = 'Piece'
