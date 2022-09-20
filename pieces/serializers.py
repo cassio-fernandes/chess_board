@@ -2,10 +2,14 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from pieces import models
+from pieces.fields import CustomChoiceField
 from shared import rules
 
 
 class PieceSerializer(serializers.ModelSerializer):
+    type = CustomChoiceField(choices=models.Piece.TypeChoices)
+    color = CustomChoiceField(choices=models.Piece.ColorChoices)
+
     class Meta:
         model = models.Piece
         fields = '__all__'
@@ -25,16 +29,13 @@ class PieceSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def create(self, validate_data):
-        instance = models.Piece(
-            type=validate_data.get('type'),
-            color=validate_data.get('color')
-        )
-        instance.save()
-        return instance
 
-    def update(self, instance: models.Piece, validated_data):
-        instance.type = validated_data.get('type', instance.type)
-        instance.color = validated_data.get('color', instance.color)
-        instance.save()
-        return instance
+class PieceMovement(serializers.Serializer):
+    piece_id = PieceSerializer(required=False)
+    coordinate = serializers.CharField(max_length=2)
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
