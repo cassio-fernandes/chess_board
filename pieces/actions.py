@@ -5,7 +5,6 @@ class ChessBoard:
     def __init__(self):
         self.columns = string.ascii_lowercase[:8]
         self.rows = string.digits[-2:0:-1]
-
         self.board = self._make_board()
 
     def _make_board(self):
@@ -24,102 +23,76 @@ class PieceMovement:
 
     @staticmethod
     def king(location):
-        column, row = location
-        row = int(row)
-        vertical = []
-        horizontal = []
-        movements = []
-
-        if row - 1 >= 1:
-            vertical.append(row - 1)
-
-        vertical.append(row)
-
-        if row + 1 < 8:
-            vertical.append(row + 1)
-
-        column_index = PieceMovement.chess.columns.index(column)
-
-        if column_index - 1 >= 1:
-            horizontal.append(PieceMovement.chess.columns[column_index - 1])
-
-        horizontal.append(PieceMovement.chess.columns[column_index])
-
-        if column_index + 1 < 8:
-            horizontal.append(PieceMovement.chess.columns[column_index + 1])
-
-        for r in vertical:
-            movements.append([PieceMovement.chess.board[r][c] for c in horizontal if PieceMovement.chess.board[r][c] != location])
-
-        return movements
+        return []
 
     @staticmethod
     def queen(location):
-        movements = []
-        for row in PieceMovement.chess.rows:
-            row = int(row)
-            movements.append([PieceMovement.chess.board[row][col] for col in PieceMovement.chess.columns if PieceMovement.chess.board[row][col] != location])
-        # return movements
-        [print(m) for m in movements]
+        return []
 
     @staticmethod
     def rook(location):
-        column, row = location
-        row = int(row)
-        return [[PieceMovement.chess.board[row][col] for col in PieceMovement.chess.board[int(row)] if PieceMovement.chess.board[row][col] != location],
-                [PieceMovement.chess.board[int(r)][column] for r in PieceMovement.chess.rows if PieceMovement.chess.board[int(r)][column] != location]]
+        return []
 
     @staticmethod
-    def knight(location):
-        column, row = location
+    def knight(coordinate):
+        column, row = coordinate
         row = int(row)
         movements = []
 
-        def get_next(data, _target, increment):
+        def next_position(data, origin, increment):
             try:
-                return data[_target + increment]
-            except IndexError:
-                return data[_target]
+                return data[origin + increment]
+            except (KeyError, IndexError):
+                return None
 
-        def get_previous(data, _target, decrement):
+        def previous_position(data, origin, decrement):
             try:
-                return data[_target - decrement]
-            except IndexError:
-                return data[_target]
+                index = origin - decrement
+                # check to prevent list slicing
+                if index >= 0:
+                    return data[index]
+                return None
+            except (KeyError, IndexError):
+                return None
 
-        target = PieceMovement.chess.columns.index(column)
-        if row + 2 <= 8:
-            _current_location = get_next(data=PieceMovement.chess.board, _target=row, increment=2)
-            if target + 1 < 8:
-                movements.append(_current_location[get_next(data=PieceMovement.chess.columns, _target=target, increment=1)])
+        def columns(current_row):
+            right = next_position(data=PieceMovement.chess.columns, origin=column_origin, increment=1)
+            left = previous_position(data=PieceMovement.chess.columns, origin=column_origin, decrement=1)
 
-            if target - 1 >= 1:
-                movements.append(_current_location[get_previous(data=PieceMovement.chess.columns, _target=target, decrement=1)])
+            return [current_row.get(right), current_row.get(left)]
 
-        if row - 2 >= 1:
-            _current_location = get_previous(data=PieceMovement.chess.board, _target=row, decrement=2)
-            if target + 1 < 8:
-                movements.append(_current_location[get_next(data=PieceMovement.chess.columns, _target=target, increment=1)])
+        def rows(current_column):
+            up = next_position(data=PieceMovement.chess.board, origin=row, increment=1)
+            down = previous_position(data=PieceMovement.chess.board, origin=row, decrement=1)
+            _columns = []
 
-            if target - 1 >= 1:
-                movements.append(_current_location[get_previous(data=PieceMovement.chess.columns, _target=target, decrement=1)])
+            if up:
+                _columns.append(up.get(current_column))
 
-        if target + 2 <= 8:
-            if row + 1 < 8:
-                _current_location = get_next(data=PieceMovement.chess.board, _target=row, increment=1)
-                movements.append(_current_location[get_next(data=PieceMovement.chess.columns, _target=target, increment=2)])
+            if down:
+                _columns.append(down.get(current_column))
 
-            if row - 1 >= 1:
-                _current_location = get_previous(data=PieceMovement.chess.board, _target=row, decrement=1)
-                movements.append(_current_location[get_next(data=PieceMovement.chess.columns, _target=target, increment=2)])
+            return _columns
 
-        if target - 2 >= 1:
-            if row - 1 >= 1:
-                _current_location = get_previous(data=PieceMovement.chess.board, _target=row, decrement=1)
-                movements.append(_current_location[get_previous(data=PieceMovement.chess.columns, _target=target, decrement=2)])
+        column_origin = PieceMovement.chess.columns.index(column)
+        row_origin = PieceMovement.chess.board.get(row)
 
-            if row + 1 < 8:
-                _current_location = get_next(data=PieceMovement.chess.board, _target=row, increment=1)
-                movements.append(_current_location[get_previous(data=PieceMovement.chess.columns, _target=target, decrement=2)])
+        if row_origin and column_origin >= 0:
+            row_above = next_position(data=PieceMovement.chess.board, origin=row, increment=2)
+            row_below = previous_position(data=PieceMovement.chess.board, origin=row, decrement=2)
+            column_right = next_position(data=PieceMovement.chess.columns, origin=column_origin, increment=2)
+            column_left = previous_position(data=PieceMovement.chess.columns, origin=column_origin, decrement=2)
 
-        return movements
+            if row_above:
+                movements.extend(columns(row_above))
+
+            if row_below:
+                movements.extend(columns(row_below))
+
+            if column_right:
+                movements.extend(rows(column_right))
+
+            if column_left:
+                movements.extend(rows(column_left))
+
+        return list(filter(lambda x: x is not None, movements))
