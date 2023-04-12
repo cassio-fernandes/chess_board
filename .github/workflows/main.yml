@@ -30,7 +30,7 @@ jobs:
     environment:
       name: production
       url: ''
-    needs: [build, deploy-dev]
+    needs: build
     steps:
       - name: Deploy production environment
         run: echo Deployment finished
