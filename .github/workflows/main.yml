@@ -1,0 +1,36 @@
+name: chessboard
+on:
+  workflow_dispatch:
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: echo All test has been passed
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: echo Build finished
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: ''
+    needs: build
+    steps:
+      - name: Deploy development environment
+        run: echo Deployment finished
+  
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ''
+    needs: [build, deploy-dev]
+    steps:
+      - name: Deploy production environment
+        run: echo Deployment finished
