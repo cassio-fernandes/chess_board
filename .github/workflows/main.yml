@@ -18,23 +18,9 @@ jobs:
     steps:
       - name: Build
         run: echo Build finished
-
-  deploy-dev:
-    runs-on: ubuntu-latest
-    branches:
-      development
-    environment:
-      name: development
-      url: ''
-    needs: build
-    steps:
-      - name: Deploy development environment
-        run: echo Deployment finished
   
   deploy-prod:
     runs-on: ubuntu-latest
-    branches:
-      main
     environment:
       name: production
       url: ''
