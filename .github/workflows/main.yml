@@ -21,8 +21,6 @@ jobs:
   
   deploy-prod:
     runs-on: ubuntu-latest
-    branches:
-      main
     environment:
       name: production
       url: ''
