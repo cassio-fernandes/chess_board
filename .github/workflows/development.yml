@@ -1,9 +1,9 @@
-name: chessboard
+name: chessboard-dev
 
 on:
   push:
     branches:
-      - main
+      - '*'
 
 jobs:
   tests:
@@ -21,24 +21,10 @@ jobs:
 
   deploy-dev:
     runs-on: ubuntu-latest
-    branches:
-      development
     environment:
       name: development
       url: ''
     needs: build
     steps:
       - name: Deploy development environment
-        run: echo Deployment finished
-  
-  deploy-prod:
-    runs-on: ubuntu-latest
-    branches:
-      main
-    environment:
-      name: production
-      url: ''
-    needs: build
-    steps:
-      - name: Deploy production environment
         run: echo Deployment finished

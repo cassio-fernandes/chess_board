@@ -28,6 +28,6 @@ run application:      `$ python runserver 127.0.0.1:8000`
 
 _________
 
-EXECUTE TESTS:
+EXECUTE TESTS: 
 
 * `$ coverage run manage.py test pieces/ -v 2`
