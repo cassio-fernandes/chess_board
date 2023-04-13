@@ -14,7 +14,7 @@ with all possible locations where the knight can move within 2 turns.
 
 REQUIREMENTS:
 * Linux
-* Python 3.*
+* Python 3.10.*
 
 create virtualenv:    `$ python -m venv venv`
 
